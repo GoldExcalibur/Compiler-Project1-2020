@@ -1,0 +1,1 @@
+/usr/bin/c++  -std=c++11 -faligned-new -O0 -g -Wall -fPIC  -g  -rdynamic CMakeFiles/cleanf.dir/clean/clean.cc.o  -o cleanf 

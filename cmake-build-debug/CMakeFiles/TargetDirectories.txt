@@ -1,0 +1,14 @@
+/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/CMakeFiles/boost.dir
+/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/test/CMakeFiles/rebuild_cache.dir
+/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/test/CMakeFiles/edit_cache.dir
+/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/test/CMakeFiles/gemm.dir
+/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/test/CMakeFiles/conv2d.dir
+/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/project1/CMakeFiles/rebuild_cache.dir
+/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/project1/CMakeFiles/edit_cache.dir
+/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/project1/CMakeFiles/clean_run.dir
+/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/project1/CMakeFiles/test1.dir
+/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/project1/CMakeFiles/solution.dir
+/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/project1/CMakeFiles/cleanf.dir
+/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/project1/CMakeFiles/solution_run.dir
