@@ -124,6 +124,19 @@ boost/fast:
 .PHONY : boost/fast
 
 #=============================================================================
+# Target rules for targets named conv2d
+
+# Build rule for target.
+conv2d: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 conv2d
+.PHONY : conv2d
+
+# fast build rule for target.
+conv2d/fast:
+	$(MAKE) -f test/CMakeFiles/conv2d.dir/build.make test/CMakeFiles/conv2d.dir/build
+.PHONY : conv2d/fast
+
+#=============================================================================
 # Target rules for targets named gemm
 
 # Build rule for target.
@@ -137,17 +150,17 @@ gemm/fast:
 .PHONY : gemm/fast
 
 #=============================================================================
-# Target rules for targets named conv2d
+# Target rules for targets named parse
 
 # Build rule for target.
-conv2d: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 conv2d
-.PHONY : conv2d
+parse: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 parse
+.PHONY : parse
 
 # fast build rule for target.
-conv2d/fast:
-	$(MAKE) -f test/CMakeFiles/conv2d.dir/build.make test/CMakeFiles/conv2d.dir/build
-.PHONY : conv2d/fast
+parse/fast:
+	$(MAKE) -f test/CMakeFiles/parse.dir/build.make test/CMakeFiles/parse.dir/build
+.PHONY : parse/fast
 
 #=============================================================================
 # Target rules for targets named clean_run
@@ -213,6 +226,33 @@ solution_run: cmake_check_build_system
 solution_run/fast:
 	$(MAKE) -f project1/CMakeFiles/solution_run.dir/build.make project1/CMakeFiles/solution_run.dir/build
 .PHONY : solution_run/fast
+
+src/CCPrinter.o: src/CCPrinter.cc.o
+
+.PHONY : src/CCPrinter.o
+
+# target to build an object file
+src/CCPrinter.cc.o:
+	$(MAKE) -f CMakeFiles/boost.dir/build.make CMakeFiles/boost.dir/src/CCPrinter.cc.o
+.PHONY : src/CCPrinter.cc.o
+
+src/CCPrinter.i: src/CCPrinter.cc.i
+
+.PHONY : src/CCPrinter.i
+
+# target to preprocess a source file
+src/CCPrinter.cc.i:
+	$(MAKE) -f CMakeFiles/boost.dir/build.make CMakeFiles/boost.dir/src/CCPrinter.cc.i
+.PHONY : src/CCPrinter.cc.i
+
+src/CCPrinter.s: src/CCPrinter.cc.s
+
+.PHONY : src/CCPrinter.s
+
+# target to generate assembly for a file
+src/CCPrinter.cc.s:
+	$(MAKE) -f CMakeFiles/boost.dir/build.make CMakeFiles/boost.dir/src/CCPrinter.cc.s
+.PHONY : src/CCPrinter.cc.s
 
 src/IR.o: src/IR.cc.o
 
@@ -331,13 +371,17 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... boost"
-	@echo "... gemm"
 	@echo "... conv2d"
+	@echo "... gemm"
+	@echo "... parse"
 	@echo "... clean_run"
 	@echo "... test1"
 	@echo "... solution"
 	@echo "... cleanf"
 	@echo "... solution_run"
+	@echo "... src/CCPrinter.o"
+	@echo "... src/CCPrinter.i"
+	@echo "... src/CCPrinter.s"
 	@echo "... src/IR.o"
 	@echo "... src/IR.i"
 	@echo "... src/IR.s"

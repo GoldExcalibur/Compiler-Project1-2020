@@ -15,6 +15,8 @@
 #include "IRVisitor.h"
 #include "type.h"
 
+#include "CCPrinter.h"
+
 using namespace Boost::Internal;
 
 const int INF = 256;
@@ -708,7 +710,8 @@ int main(int argc, char* argv[]){
     //kernel = mutator.mutate(kernel);
 
     // printer
-    IRPrinter printer;
+    //IRPrinter printer;
+    CCPrinter printer;
     std::string code = printer.print(root.gp);
 
     std::cout << "######" << std::endl;

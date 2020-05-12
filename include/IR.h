@@ -380,7 +380,7 @@ class Expr : public Ref<const ExprNode> {
         Ref<const ExprNode>(FloatImm::make(Type::float_scalar(64), value)) {}
 
 	Expr& operator=(const Expr& other){
-		thi->set_ptr(other.real_ptr());
+		this->set_ptr(other.real_ptr());
 		return *this;
 	}
 

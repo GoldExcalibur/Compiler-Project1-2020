@@ -57,9 +57,22 @@ include CMakeFiles/boost.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/boost.dir/flags.make
 
+CMakeFiles/boost.dir/src/CCPrinter.cc.o: CMakeFiles/boost.dir/flags.make
+CMakeFiles/boost.dir/src/CCPrinter.cc.o: ../src/CCPrinter.cc
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/boost.dir/src/CCPrinter.cc.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/boost.dir/src/CCPrinter.cc.o -c /home/hjh/CompilerProject-2020Spring-Part1/src/CCPrinter.cc
+
+CMakeFiles/boost.dir/src/CCPrinter.cc.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/boost.dir/src/CCPrinter.cc.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/hjh/CompilerProject-2020Spring-Part1/src/CCPrinter.cc > CMakeFiles/boost.dir/src/CCPrinter.cc.i
+
+CMakeFiles/boost.dir/src/CCPrinter.cc.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/boost.dir/src/CCPrinter.cc.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/hjh/CompilerProject-2020Spring-Part1/src/CCPrinter.cc -o CMakeFiles/boost.dir/src/CCPrinter.cc.s
+
 CMakeFiles/boost.dir/src/IR.cc.o: CMakeFiles/boost.dir/flags.make
 CMakeFiles/boost.dir/src/IR.cc.o: ../src/IR.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/boost.dir/src/IR.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/boost.dir/src/IR.cc.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/boost.dir/src/IR.cc.o -c /home/hjh/CompilerProject-2020Spring-Part1/src/IR.cc
 
 CMakeFiles/boost.dir/src/IR.cc.i: cmake_force
@@ -72,7 +85,7 @@ CMakeFiles/boost.dir/src/IR.cc.s: cmake_force
 
 CMakeFiles/boost.dir/src/IRMutator.cc.o: CMakeFiles/boost.dir/flags.make
 CMakeFiles/boost.dir/src/IRMutator.cc.o: ../src/IRMutator.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/boost.dir/src/IRMutator.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/boost.dir/src/IRMutator.cc.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/boost.dir/src/IRMutator.cc.o -c /home/hjh/CompilerProject-2020Spring-Part1/src/IRMutator.cc
 
 CMakeFiles/boost.dir/src/IRMutator.cc.i: cmake_force
@@ -85,7 +98,7 @@ CMakeFiles/boost.dir/src/IRMutator.cc.s: cmake_force
 
 CMakeFiles/boost.dir/src/IRPrinter.cc.o: CMakeFiles/boost.dir/flags.make
 CMakeFiles/boost.dir/src/IRPrinter.cc.o: ../src/IRPrinter.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/boost.dir/src/IRPrinter.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/boost.dir/src/IRPrinter.cc.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/boost.dir/src/IRPrinter.cc.o -c /home/hjh/CompilerProject-2020Spring-Part1/src/IRPrinter.cc
 
 CMakeFiles/boost.dir/src/IRPrinter.cc.i: cmake_force
@@ -98,7 +111,7 @@ CMakeFiles/boost.dir/src/IRPrinter.cc.s: cmake_force
 
 CMakeFiles/boost.dir/src/IRVisitor.cc.o: CMakeFiles/boost.dir/flags.make
 CMakeFiles/boost.dir/src/IRVisitor.cc.o: ../src/IRVisitor.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/boost.dir/src/IRVisitor.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/boost.dir/src/IRVisitor.cc.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/boost.dir/src/IRVisitor.cc.o -c /home/hjh/CompilerProject-2020Spring-Part1/src/IRVisitor.cc
 
 CMakeFiles/boost.dir/src/IRVisitor.cc.i: cmake_force
@@ -111,6 +124,7 @@ CMakeFiles/boost.dir/src/IRVisitor.cc.s: cmake_force
 
 # Object files for target boost
 boost_OBJECTS = \
+"CMakeFiles/boost.dir/src/CCPrinter.cc.o" \
 "CMakeFiles/boost.dir/src/IR.cc.o" \
 "CMakeFiles/boost.dir/src/IRMutator.cc.o" \
 "CMakeFiles/boost.dir/src/IRPrinter.cc.o" \
@@ -119,13 +133,14 @@ boost_OBJECTS = \
 # External object files for target boost
 boost_EXTERNAL_OBJECTS =
 
+libboost.so: CMakeFiles/boost.dir/src/CCPrinter.cc.o
 libboost.so: CMakeFiles/boost.dir/src/IR.cc.o
 libboost.so: CMakeFiles/boost.dir/src/IRMutator.cc.o
 libboost.so: CMakeFiles/boost.dir/src/IRPrinter.cc.o
 libboost.so: CMakeFiles/boost.dir/src/IRVisitor.cc.o
 libboost.so: CMakeFiles/boost.dir/build.make
 libboost.so: CMakeFiles/boost.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX shared library libboost.so"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX shared library libboost.so"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/boost.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

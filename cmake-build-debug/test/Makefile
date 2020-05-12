@@ -111,6 +111,21 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
+test/CMakeFiles/conv2d.dir/rule:
+	cd /home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug && $(MAKE) -f CMakeFiles/Makefile2 test/CMakeFiles/conv2d.dir/rule
+.PHONY : test/CMakeFiles/conv2d.dir/rule
+
+# Convenience name for target.
+conv2d: test/CMakeFiles/conv2d.dir/rule
+
+.PHONY : conv2d
+
+# fast build rule for target.
+conv2d/fast:
+	cd /home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug && $(MAKE) -f test/CMakeFiles/conv2d.dir/build.make test/CMakeFiles/conv2d.dir/build
+.PHONY : conv2d/fast
+
+# Convenience name for target.
 test/CMakeFiles/gemm.dir/rule:
 	cd /home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug && $(MAKE) -f CMakeFiles/Makefile2 test/CMakeFiles/gemm.dir/rule
 .PHONY : test/CMakeFiles/gemm.dir/rule
@@ -126,19 +141,19 @@ gemm/fast:
 .PHONY : gemm/fast
 
 # Convenience name for target.
-test/CMakeFiles/conv2d.dir/rule:
-	cd /home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug && $(MAKE) -f CMakeFiles/Makefile2 test/CMakeFiles/conv2d.dir/rule
-.PHONY : test/CMakeFiles/conv2d.dir/rule
+test/CMakeFiles/parse.dir/rule:
+	cd /home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug && $(MAKE) -f CMakeFiles/Makefile2 test/CMakeFiles/parse.dir/rule
+.PHONY : test/CMakeFiles/parse.dir/rule
 
 # Convenience name for target.
-conv2d: test/CMakeFiles/conv2d.dir/rule
+parse: test/CMakeFiles/parse.dir/rule
 
-.PHONY : conv2d
+.PHONY : parse
 
 # fast build rule for target.
-conv2d/fast:
-	cd /home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug && $(MAKE) -f test/CMakeFiles/conv2d.dir/build.make test/CMakeFiles/conv2d.dir/build
-.PHONY : conv2d/fast
+parse/fast:
+	cd /home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug && $(MAKE) -f test/CMakeFiles/parse.dir/build.make test/CMakeFiles/parse.dir/build
+.PHONY : parse/fast
 
 conv2d.o: conv2d.cc.o
 
@@ -194,6 +209,33 @@ gemm.cc.s:
 	cd /home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug && $(MAKE) -f test/CMakeFiles/gemm.dir/build.make test/CMakeFiles/gemm.dir/gemm.cc.s
 .PHONY : gemm.cc.s
 
+parse.o: parse.cc.o
+
+.PHONY : parse.o
+
+# target to build an object file
+parse.cc.o:
+	cd /home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug && $(MAKE) -f test/CMakeFiles/parse.dir/build.make test/CMakeFiles/parse.dir/parse.cc.o
+.PHONY : parse.cc.o
+
+parse.i: parse.cc.i
+
+.PHONY : parse.i
+
+# target to preprocess a source file
+parse.cc.i:
+	cd /home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug && $(MAKE) -f test/CMakeFiles/parse.dir/build.make test/CMakeFiles/parse.dir/parse.cc.i
+.PHONY : parse.cc.i
+
+parse.s: parse.cc.s
+
+.PHONY : parse.s
+
+# target to generate assembly for a file
+parse.cc.s:
+	cd /home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug && $(MAKE) -f test/CMakeFiles/parse.dir/build.make test/CMakeFiles/parse.dir/parse.cc.s
+.PHONY : parse.cc.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -201,15 +243,19 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... rebuild_cache"
-	@echo "... edit_cache"
-	@echo "... gemm"
 	@echo "... conv2d"
+	@echo "... gemm"
+	@echo "... edit_cache"
+	@echo "... parse"
 	@echo "... conv2d.o"
 	@echo "... conv2d.i"
 	@echo "... conv2d.s"
 	@echo "... gemm.o"
 	@echo "... gemm.i"
 	@echo "... gemm.s"
+	@echo "... parse.o"
+	@echo "... parse.i"
+	@echo "... parse.s"
 .PHONY : help
 
 

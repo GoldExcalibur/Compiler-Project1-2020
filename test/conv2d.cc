@@ -7,6 +7,8 @@
 #include "IRPrinter.h"
 #include "type.h"
 
+#include "CCPrinter.h"
+
 using namespace Boost::Internal;
 
 int main() {
@@ -93,7 +95,8 @@ int main() {
     kernel = mutator.mutate(kernel);
 
     // printer
-    IRPrinter printer;
+    //IRPrinter printer;
+    CCPrinter printer;
     std::string code = printer.print(kernel);
 
     std::cout << code;

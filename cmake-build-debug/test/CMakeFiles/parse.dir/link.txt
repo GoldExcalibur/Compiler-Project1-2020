@@ -1,0 +1,1 @@
+/usr/bin/c++  -std=c++11 -faligned-new -O0 -g -Wall -fPIC  -g  -rdynamic CMakeFiles/parse.dir/parse.cc.o  -o parse  -Wl,-rpath,/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug ../libboost.so -ldl 

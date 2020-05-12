@@ -83,6 +83,54 @@
 					<DistClean command="/usr/bin/make -j8 -f &quot;/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
+			<Target title="conv2d">
+				<Option output="/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/test/conv2d" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/test"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/hjh/CompilerProject-2020Spring-Part1/include"/>
+					<Add directory="/home/hjh/CompilerProject-2020Spring-Part1/test/../include"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../include/c++/9.3.0"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../include/c++/9.3.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../include/c++/9.3.0/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include-fixed"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/test/Makefile&quot;  VERBOSE=1 conv2d"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/test/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/test/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/test/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="conv2d/fast">
+				<Option output="/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/test/conv2d" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/test"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/hjh/CompilerProject-2020Spring-Part1/include"/>
+					<Add directory="/home/hjh/CompilerProject-2020Spring-Part1/test/../include"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../include/c++/9.3.0"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../include/c++/9.3.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0/../../../../include/c++/9.3.0/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0/include-fixed"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/test/Makefile&quot;  VERBOSE=1 conv2d/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/test/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/test/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/test/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
 			<Target title="gemm">
 				<Option output="/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/test/gemm" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/test"/>
@@ -131,8 +179,8 @@
 					<DistClean command="/usr/bin/make -j8 -f &quot;/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/test/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="conv2d">
-				<Option output="/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/test/conv2d" prefix_auto="0" extension_auto="0"/>
+			<Target title="parse">
+				<Option output="/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/test/parse" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/test"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
@@ -149,14 +197,14 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/test/Makefile&quot;  VERBOSE=1 conv2d"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/test/Makefile&quot;  VERBOSE=1 parse"/>
 					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/test/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="/usr/bin/make -j8 -f &quot;/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/test/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="/usr/bin/make -j8 -f &quot;/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/test/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="conv2d/fast">
-				<Option output="/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/test/conv2d" prefix_auto="0" extension_auto="0"/>
+			<Target title="parse/fast">
+				<Option output="/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/test/parse" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/test"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
@@ -173,7 +221,7 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/test/Makefile&quot;  VERBOSE=1 conv2d/fast"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/test/Makefile&quot;  VERBOSE=1 parse/fast"/>
 					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/test/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="/usr/bin/make -j8 -f &quot;/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/test/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="/usr/bin/make -j8 -f &quot;/home/hjh/CompilerProject-2020Spring-Part1/cmake-build-debug/test/Makefile&quot;  VERBOSE=1 clean"/>
@@ -400,6 +448,12 @@
 			<Option target="solution"/>
 			<Option target="solution_run"/>
 		</Unit>
+		<Unit filename="/home/hjh/CompilerProject-2020Spring-Part1/src/CCPrinter.cc">
+			<Option target="boost"/>
+		</Unit>
+		<Unit filename="/home/hjh/CompilerProject-2020Spring-Part1/src/CCPrinter.h">
+			<Option target="boost"/>
+		</Unit>
 		<Unit filename="/home/hjh/CompilerProject-2020Spring-Part1/src/IR.cc">
 			<Option target="boost"/>
 		</Unit>
@@ -417,6 +471,9 @@
 		</Unit>
 		<Unit filename="/home/hjh/CompilerProject-2020Spring-Part1/test/gemm.cc">
 			<Option target="gemm"/>
+		</Unit>
+		<Unit filename="/home/hjh/CompilerProject-2020Spring-Part1/test/parse.cc">
+			<Option target="parse"/>
 		</Unit>
 		<Unit filename="/home/hjh/CompilerProject-2020Spring-Part1/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>

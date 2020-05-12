@@ -66,7 +66,7 @@ if(NOT MSVC)
     set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 endif()
 
-add_library(${LIB_NAME} SHARED ${COMPILER_SRCS} ${COMPILER_INCLUDES})
+add_library(${LIB_NAME} SHARED ${COMPILER_SRCS} ${COMPILER_INCLUDES} src/CCPrinter.cc include/CCPrinter.h)
 
 target_link_libraries(${LIB_NAME} ${BOOST_LINKER_LIBS} ${BOOST_RUNTIME_LINKER_LIBS})
 
