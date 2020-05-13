@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
 #include <string.h>
 #include <string>
 #include <list>
@@ -19,7 +21,7 @@
 
 using namespace Boost::Internal;
 
-const int INF = 256;
+const int INF = 128;
 
 bool compare_str(const std::string& s1, const std::string& s2){
     int i = 0, j = 0;
@@ -522,7 +524,9 @@ public:
 
     void IR_S(){
         Stmt true_stmt = Move::make(child[0].ep, child[1].ep, MoveType::MemToMem);
-        Stmt fake_stmt = Move::make(child[0].ep, child[0].ep, MoveType::MemToMem);
+        Stmt fake_stmt;
+        fake_stmt = Move::make(child[0].ep, child[0].ep, MoveType::MemToMem);
+        
         
         std::vector<Expr> tmp; // indexs for loop
         for(std::map<std::string, Expr>::iterator p = loop_indexs.begin(); p != loop_indexs.end(); ++p){
@@ -681,7 +685,7 @@ public:
 
 
 std::string src2dst(const std::string& src){
-    std::string dst = "../project1/kernels/";
+    std::string dst = "./kernels/";
     std::cout << src << std::endl;
     int s1 = src.rfind("/");
     int s2 = src.rfind(".json");
@@ -689,47 +693,48 @@ std::string src2dst(const std::string& src){
     return dst;
 }
 
-int main(int argc, char* argv[]){
+
+int main(){
     std::string src;
-    //src = "../project/cases/case5.json";
-    // for(int i = 0; i < argc; ++i){
-    //     std::cout << argv[i] << std::endl;
-    // }
-    src = argv[1];
-    std::cout << src << std::endl;
-    example = parse_json(src);
-    example.print();
-    AST root = AST((nodetype) 0, example.kernel);
-    root.build_tree();
-    std::cout << "-----" << std::endl;
-    root.travel();
-    std::cout << "*****" << std::endl;
-    root.build_IR();
+    for(int i = 1; i <= 10; ++i){
+        if(i == 6) continue;
+        src = "./cases/case" + std::to_string(i) + ".json";
+        if(access(src.c_str(), 0) == -1) continue;
+        example = parse_json(src);
+        example.print();
+        AST root = AST((nodetype) 0, example.kernel);
+        root.build_tree();
+        std::cout << "-----" << std::endl;
+        root.travel();
+        std::cout << "*****" << std::endl;
+        root.build_IR();
 
-    std::cout << root.str <<std::endl;
+        std::cout << root.str <<std::endl;
 
-    Group kernel = root.gp;
+        Group kernel = root.gp;
 
-    // visitor
-    IRVisitor visitor;
-    root.gp.visit_group(&visitor);
+        // visitor
+        IRVisitor visitor;
+        root.gp.visit_group(&visitor);
 
-    // mutator
-    //IRMutator mutator;
-    //kernel = mutator.mutate(kernel);
+        // mutator
+        //IRMutator mutator;
+        //kernel = mutator.mutate(kernel);
 
-    // printer
-    //IRPrinter printer;
-    CCPrinter printer;
-    std::string code = printer.print(root.gp);
+        // printer
+        //IRPrinter printer;
+        CCPrinter printer;
+        std::string code = printer.print(root.gp);
 
-    std::string dst;
-    dst = src2dst(src);
-    std::ofstream ofile(dst, std::ios::out);
-    ofile << code;
-    ofile.close();
+        std::string dst;
+        dst = src2dst(src);
+        std::ofstream ofile(dst, std::ios::out);
+        ofile << code;
+        ofile.close();
 
-    std::cout << "######" << std::endl;
-    std::cout << code;
+        std::cout << "######" << std::endl;
+        std::cout << code;
+    }
+   
     return 0;
 }

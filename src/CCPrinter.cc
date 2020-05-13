@@ -65,6 +65,7 @@ namespace Boost {
 
 
         void CCPrinter::visit(Ref<const Binary> op) {
+            oss << "(" ;
             (op->a).visit_expr(this);
             if (op->op_type == BinaryOpType::Add) {
                 oss << " + ";
@@ -82,6 +83,7 @@ namespace Boost {
                 oss << " || ";
             }
             (op->b).visit_expr(this);
+            oss << ")";
         }
 
 
@@ -241,6 +243,7 @@ namespace Boost {
             (op->dst).visit_expr(this);
             oss << " =";
             (op->src).visit_expr(this);
+            oss << ";"; // add by yzh
             oss << "\n";
         }
 
