@@ -2,6 +2,7 @@
 #include <fstream>
 #include <stdlib.h>
 #include <stdio.h>
+// #include "io.h"
 #include <unistd.h>
 #include <string.h>
 #include <string>
@@ -22,6 +23,31 @@
 using namespace Boost::Internal;
 
 const int INF = 128;
+
+// void getFiles(std::string path, std::vector<std::string>& files)
+// {
+// 	intptr_t   hFile = 0;//文件句柄，过会儿用来查找
+// 	struct _finddata_t fileinfo;//文件信息
+// 	std::string p;	
+// 	if ((hFile = _findfirst(p.assign(path).append("\\*").c_str(), &fileinfo)) != -1)
+//      //如果查找到第一个文件
+// 	{
+// 		do
+// 		{
+// 			if ((fileinfo.attrib &  _A_SUBDIR))//如果是文件夹
+// 			{
+// 				if (strcmp(fileinfo.name, ".") != 0 && strcmp(fileinfo.name, "..") != 0)
+// 					getFiles(p.assign(path).append("\\").append(fileinfo.name), files);
+// 			}
+// 			else//如果是文件
+// 			{
+// 				files.push_back(p.assign(path).append("\\").append(fileinfo.name));
+// 			}
+// 		} while (_findnext(hFile, &fileinfo) == 0);	//能寻找到其他文件
+
+// 		_findclose(hFile);	//结束查找，关闭句柄
+// 	}
+// }
 
 bool compare_str(const std::string& s1, const std::string& s2){
     int i = 0, j = 0;
@@ -695,10 +721,16 @@ std::string src2dst(const std::string& src){
 
 
 int main(){
+
+    // std::string json_dir = "../cases";
+    // std::vector<std::string> json_files;
+    // getFiles(json_dir, json_files);
+    // std::cout << json_files.size() << std::endl;
     std::string src;
-    for(int i = 1; i <= 10; ++i){
-        if(i == 6) continue;
-        src = "./cases/case" + std::to_string(i) + ".json";
+    for(int i = 0; i <= 10; ++i){
+        if(i == 6) continue; // fix me
+        if(i == 0) src = "./cases/example.json";
+        else src = "./cases/case" + std::to_string(i) + ".json";
         if(access(src.c_str(), 0) == -1) continue;
         example = parse_json(src);
         example.print();
