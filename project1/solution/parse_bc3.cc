@@ -925,6 +925,22 @@ public:
             }
         }
         else{
+            if(father && father->father){
+                if(father->t == 8){
+                    int pos = -1, upbound = -1;
+                    for(int i = 0; i < father->child.size(); ++i){
+                        if(father->child[i].str == str){
+                            pos = i;
+                            break;
+                        }
+                    }
+                    if(pos != -1){
+                        upbound = father->father->child[1].child[pos].value;  
+                        std::cout << "fuck " << str <<  " " << upbound << std::endl;
+                        dom_inf = Dom::make(index_type, 0, upbound);
+                    }                
+                }
+            }
             ep = Index::make(index_type, str, dom_inf, IndexType::Spatial);
             if (expr_index_list.find(str) == expr_index_list.end()) {
               expr_index_list[str] = ep;

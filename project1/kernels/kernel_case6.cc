@@ -1,10 +1,10 @@
 #include "../run.h"
 void kernel_case6(float (&B)[2][16][7][7], float (&C)[8][16][3][3], float (&A)[2][8][5][5]) {
   float temp[2][8][5][5];
-  for(int k = -64; k < -64 + 128; ++k){
-    for(int n = -64; n < -64 + 128; ++n){
-      for(int p = -64; p < -64 + 128; ++p){
-        for(int q = -64; q < -64 + 128; ++q){
+  for(int k = 0; k < 0 + 8; ++k){
+    for(int n = 0; n < 0 + 2; ++n){
+      for(int p = 0; p < 0 + 5; ++p){
+        for(int q = 0; q < 0 + 5; ++q){
           if ((((((((0 <= n && n < 2) && 0 <= k) && k < 8) && 0 <= p) && p < 5) && 0 <= q) && q < 5)) {
             temp[n][k][p][q] =0;
           } else {
@@ -15,7 +15,7 @@ void kernel_case6(float (&B)[2][16][7][7], float (&C)[8][16][3][3], float (&A)[2
           } else {
             A[n][k][p][q] =A[n][k][p][q];
           }
-          for(int c = -64; c < -64 + 128; ++c){
+          for(int c = 0; c < 0 + 16; ++c){
             for(int r = -64; r < -64 + 128; ++r){
               for(int s = -64; s < -64 + 128; ++s){
                 if ((((((((((((((0 <= c && c < 16) && 0 <= k) && k < 8) && 0 <= n) && n < 2) && 0 <= (p + r)) && (p + r) < 7) && 0 <= (q + s)) && (q + s) < 7) && 0 <= r) && r < 3) && 0 <= s) && s < 3)) {

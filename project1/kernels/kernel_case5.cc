@@ -1,8 +1,8 @@
 #include "../run.h"
 void kernel_case5(float (&B)[16][32], float (&C)[32][32], float (&D)[16][32], float (&alpha), float (&beta), float (&A)[16][32]) {
   float temp[16][32];
-  for(int i = -64; i < -64 + 128; ++i){
-    for(int j = -64; j < -64 + 128; ++j){
+  for(int i = 0; i < 0 + 16; ++i){
+    for(int j = 0; j < 0 + 32; ++j){
       if ((((0 <= i && i < 16) && 0 <= j) && j < 32)) {
         temp[i][j] =0;
       } else {
@@ -13,7 +13,7 @@ void kernel_case5(float (&B)[16][32], float (&C)[32][32], float (&D)[16][32], fl
       } else {
         A[i][j] =A[i][j];
       }
-      for(int k = -64; k < -64 + 128; ++k){
+      for(int k = 0; k < 0 + 32; ++k){
         if ((((((0 <= i && i < 16) && 0 <= j) && j < 32) && 0 <= k) && k < 32)) {
           temp[i][j] =(temp[i][j] + (alpha * (B[i][k] * C[k][j])));
         } else {
@@ -27,8 +27,8 @@ void kernel_case5(float (&B)[16][32], float (&C)[32][32], float (&D)[16][32], fl
       }
     }
   }
-  for(int i = -64; i < -64 + 128; ++i){
-    for(int j = -64; j < -64 + 128; ++j){
+  for(int i = 0; i < 0 + 16; ++i){
+    for(int j = 0; j < 0 + 32; ++j){
       if ((((0 <= i && i < 16) && 0 <= j) && j < 32)) {
         temp[i][j] =0;
       } else {
