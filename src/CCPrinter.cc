@@ -3,6 +3,8 @@
 //
 
 #include "CCPrinter.h"
+#include "string"
+#include "cstring"
 
 namespace Boost {
 
@@ -65,7 +67,7 @@ namespace Boost {
 
 
         void CCPrinter::visit(Ref<const Binary> op) {
-            oss << "(" ;
+            oss << "(";
             (op->a).visit_expr(this);
             if (op->op_type == BinaryOpType::Add) {
                 oss << " + ";
@@ -243,8 +245,7 @@ namespace Boost {
             (op->dst).visit_expr(this);
             oss << " =";
             (op->src).visit_expr(this);
-            oss << ";"; // add by yzh
-            oss << "\n";
+            oss << ";\n";
         }
 
 
@@ -268,6 +269,10 @@ namespace Boost {
             print_arg = false;
             oss << ") {\n";
             enter();
+
+            // declare "temp"
+            declaretemp(op);
+
             for (auto stmt : op->stmt_list) {
                 stmt.visit_stmt(this);
             }
@@ -275,6 +280,28 @@ namespace Boost {
             oss << "}\n";
         }
 
+        void CCPrinter::declaretemp(Ref<const Kernel> op){
+            //note!!
+            //premise: outputs isn't empty
+            print_indent();
+            if(op->outputs.size()==0){
+                std::cout << "temp declaration fault! because output is empty!"<<std::endl;
+                return;
+            }
+            const Var* output =static_cast<const Var*>((op->outputs[0]).get());
+            if(output->type().is_int()){
+                oss << "int";
+            }
+            else{
+                oss << "float";
+            }
+            oss << " temp";
+            for (size_t i = 0; i < output->shape.size(); ++i) {
+                oss <<"[" << output->shape[i] << "]";
+            }
+            // oss << " = {0};\n";
+            oss << ";\n" ;
+        }
 
     }  // namespace Internal
 

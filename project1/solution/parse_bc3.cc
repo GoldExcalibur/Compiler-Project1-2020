@@ -2,6 +2,7 @@
 #include <fstream>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include <string>
 #include <list>
 #include <vector>
@@ -18,7 +19,7 @@
 
 using namespace Boost::Internal;
 
-const int INF = 256;
+const int INF = 64;
 
 bool compare_str(const std::string& s1, const std::string& s2){
     int i = 0, j = 0;
@@ -130,16 +131,18 @@ std::vector<std::string> nodetype2name({"P", "S", "LHS", "RHS", "TRef", "SRef", 
     "CList", "AList", "Op", "IdExpr", "Id"});
 
 Type index_type = Type::int_scalar(32);
-Type data_type = Type::float_scalar(32);
 Type bool_type = Type::uint_scalar(32);
+Type data_type;
+
 
 std::map<std::string, Expr> loop_indexs;
 std::map<std::string, Expr> inputs;
 std::map<std::string, Expr> outputs;
 
-// bandcheck's map
+//总体的bandcheck's map 这两个结构作废了
 std::map<std::string, int> bandcheck_dom;
 std::map<std::string, Expr> bandcheck_expr;
+
 // for temp
 class Temp_for {
 public:
@@ -147,17 +150,22 @@ public:
   int n_or_p;
   int type;
   Expr ep;
-  std::map<std::string, Expr> list;
-  Temp_for(){};
-  Temp_for(std::string a, int b, Expr e, std::map<std::string, Expr> elist, int type){
+  std::map<std::string, Expr> list;             // 记录单个的index用于加减项目for循环
+  std::map<std::string, Expr> bandcheck_list;   // for temp: inde for bandcheck
+  std::map<std::string, int> bandcheck_value;  // for temp: dom for index for bandcheck
+  Temp_for(std::string a, int b, Expr e, std::map<std::string, Expr> elist, int type, std::map<std::string, Expr> bandcheck, std::map<std::string, int> bandcheck_value){
     str = a, n_or_p = b;
     ep = e, list = elist;
+    bandcheck_list = bandcheck;
+    this->bandcheck_value = bandcheck_value;
     this->type = type;
   }
   Temp_for& operator=(const Temp_for& other) {
     ep = other.ep, str = other.str;
     n_or_p = other.n_or_p, type = other.type;
     list = other.list;
+    bandcheck_list = other.bandcheck_list;
+    bandcheck_value = other.bandcheck_value;
     return *this;
   }
 };
@@ -177,7 +185,9 @@ public:
     Expr ep;            //
     std::vector<Stmt> sp;
     Group gp;
-    std::map<std::string, Expr> expr_index_list; //for for for fro temp+=
+    std::map<std::string, Expr> expr_index_list;    //for temp: index in ep
+    std::map<std::string, Expr> bandcheck_list;
+    std::map<std::string, int> bandcheck_value;    //用于记录bandcheck的范围
     float value; // only meaningful for const
 
     AST(){};
@@ -263,7 +273,8 @@ public:
                 s1 = str.find_first_of("<", i+1);
                 s2 = str.find_first_of(">", s1+1);
                 tmp = str.substr(s1, s2-s1+1);
-                if(tmp.find(',') == -1) ch = AST((nodetype) 5, str.substr(i, s2-i+1));
+                erase_blank(tmp);
+                if(compare_str(tmp, "<1>")) ch = AST((nodetype) 5, str.substr(i, s2-i+1));
                 else{
                     s1 = str.find_first_of("[", s2+1);
                     s2 = str.find_first_of("]", s1+1);
@@ -339,11 +350,11 @@ public:
         AST* ch3 = new AST((nodetype) 3, tmp);
         if(compare_str(str, tmp)) ch3 = this;
         ch3->child.push_back(ch1);
+        (ch3->child.back()).father = ch3;
         ch3->child.push_back(op);
+        (ch3->child.back()).father = ch3;
         ch3->child.push_back(ch2);
-        ch1.father = ch3;
-        op.father = ch3;
-        ch2.father = ch3;
+        (ch3->child.back()).father = ch3;
         v2.push_back(*ch3);
     }
 
@@ -497,11 +508,11 @@ public:
         AST* ch3 = new AST((nodetype) 10, tmp);
         if(compare_str(str, tmp)) ch3 = this;
         ch3->child.push_back(ch1);
+        (ch3->child.back()).father = ch3;
         ch3->child.push_back(op);
+        (ch3->child.back()).father = ch3;
         ch3->child.push_back(ch2);
-        ch1.father = ch3;
-        op.father = ch3;
-        ch2.father = ch3;
+        (ch3->child.back()).father = ch3;
         v2.push_back(*ch3);
     }
 
@@ -550,7 +561,7 @@ public:
         inputs.clear();
         outputs.clear();
     }
-    
+
     void IR_S(){
         
         
@@ -558,10 +569,17 @@ public:
         find_item(&(child[1]), 0);
         if(!for_temp_list.size()) {std::cout << "竟然没有检查出来" << std::endl<< std::endl;
         }else{
-            std::cout << "竟然检查出来" << std::endl<< std::endl;
+            std::cout << "竟然检查出来 加减项和对应的expr_index" << std::endl<< std::endl;
         }
         for (int i = 0; i < for_temp_list.size(); ++i) {
           std::cout << for_temp_list[i].str <<"****"<<nodetype2name[for_temp_list[i].type]<< std::endl;
+          for (std::map<std::string, Expr>::iterator j = for_temp_list[i].list.begin(); j != for_temp_list[i].list.end(); ++j) {
+              std::cout << j->first << std::endl;
+          }
+          std::cout << "+++++++bindcheck_list+++++++" << std::endl;
+          for (std::map<std::string, Expr>::iterator j = for_temp_list[i].bandcheck_list.begin(); j != for_temp_list[i].bandcheck_list.end(); ++j) {
+              std::cout << j->first <<"%%%%" << for_temp_list[i].bandcheck_value[j->first] << std::endl;
+          }
         }
         std::cout << "_____________***************______________" << std::endl;
         // Stmt true_stmt = Move::make(child[0].ep, child[1].ep, MoveType::MemToMem);
@@ -572,17 +590,8 @@ public:
         //     //std::cout << p->first << " ";
         //     tmp.push_back(p->second);
         // }
-        Expr cond_all, cond1, cond2;
-        std::map<std::string, int>::iterator i = bandcheck_dom.begin();
-        cond1 = Compare::make(data_type, CompareOpType::LE, Expr(int(0)), bandcheck_expr[i->first]);
-        cond2 = Compare::make(data_type, CompareOpType::LT, bandcheck_expr[i->first], Expr(int(i->second)));
-        cond_all = Binary::make(bool_type, BinaryOpType::And, cond1, cond2);
-        while((++i) != bandcheck_dom.end()){
-            cond1 = Compare::make(data_type, CompareOpType::LE, Expr(int(0)), bandcheck_expr[i->first]);
-            cond_all = Binary::make(bool_type, BinaryOpType::And, cond_all, cond1);
-            cond2 = Compare::make(data_type, CompareOpType::LT, bandcheck_expr[i->first], Expr(int(i->second)));
-            cond_all = Binary::make(bool_type, BinaryOpType::And, cond_all, cond2);
-        }
+
+        
         //Stmt main_stmt = IfThenElse::make(cond_all, true_stmt, fake_stmt);
         //------------------- 
         // 构建最外层的for循环的body_list
@@ -599,10 +608,26 @@ public:
             //std::cout << child[1].child[1].child[2].child[i].str << " "  ;
             index_list.push_back(child[0].child[0].child[2].child[i].ep);
         }
+
+
         temp = Var::make(data_type, "temp", index_list, bound_list);
+        Expr cond_temp, cond1_temp, cond2_temp;
+        cond1_temp = Compare::make(data_type, CompareOpType::LE, Expr(int(0)), index_list[0]);
+        cond2_temp = Compare::make(data_type, CompareOpType::LT, index_list[0], Expr(int(bound_list[0])));
+        cond_temp = Binary::make(bool_type, BinaryOpType::And, cond1_temp, cond2_temp);
+        for(int i = 1; i < index_list.size(); ++i){
+            cond1_temp = Compare::make(data_type, CompareOpType::LE, Expr(int(0)), index_list[i]);
+            cond_temp = Binary::make(bool_type, BinaryOpType::And, cond_temp, cond1_temp);
+            cond2_temp = Compare::make(data_type, CompareOpType::LT, index_list[i], Expr(int(bound_list[i])));
+            cond_temp = Binary::make(bool_type, BinaryOpType::And, cond_temp, cond2_temp);
+
+        }
+
         //temp = 0
         Stmt a;
         a = Move::make(temp, Expr(int(0)), MoveType::MemToMem);
+        a = IfThenElse::make(cond_temp, a, fake_stmt);
+
         body_list.push_back(a);
         //遍历for_temp_list 构造最外层循环的body_list
         for (int i = 0; i < for_temp_list.size();++i) {
@@ -622,6 +647,19 @@ public:
                     a = Move::make(temp, Binary::make(data_type, BinaryOpType::Sub, temp, for_temp_list[i].ep), MoveType::MemToMem);
                 }
                 // 加上bandcheck
+                //creat cond_all
+                Expr cond_all, cond1, cond2;
+                std::map<std::string, int>::iterator j = for_temp_list[i].bandcheck_value.begin();
+                cond1 = Compare::make(data_type, CompareOpType::LE, Expr(int(0)), for_temp_list[i].bandcheck_list[j->first]);
+                cond2 = Compare::make(data_type, CompareOpType::LT, for_temp_list[i].bandcheck_list[j->first], Expr(int(j->second)));
+                cond_all = Binary::make(bool_type, BinaryOpType::And, cond1, cond2);
+                while((++j) != for_temp_list[i].bandcheck_value.end()){
+                    cond1 = Compare::make(data_type, CompareOpType::LE, Expr(int(0)), for_temp_list[i].bandcheck_list[j->first]);
+                    cond_all = Binary::make(bool_type, BinaryOpType::And, cond_all, cond1);
+                    cond2 = Compare::make(data_type, CompareOpType::LT, for_temp_list[i].bandcheck_list[j->first], Expr(int(j->second)));
+                    cond_all = Binary::make(bool_type, BinaryOpType::And, cond_all, cond2);
+                }
+
                 a = IfThenElse::make(cond_all, a, fake_stmt);
                 // 加上index循环（循环可能为空） -> for(index){temp = temp +/-  item}
                 a = LoopNest::make(index_list, {a});
@@ -635,7 +673,8 @@ public:
                     a = Move::make(temp, Binary::make(data_type, BinaryOpType::Sub, temp, for_temp_list[i].ep), MoveType::MemToMem);
                 }
                 // 加上bandcheck
-                a = IfThenElse::make(cond_all, a, fake_stmt);
+                //a = IfThenElse::make(cond_all, a, fake_stmt);
+                a = IfThenElse::make(cond_temp, a, fake_stmt);
                 body_list.push_back(a);
             }
         }
@@ -647,17 +686,20 @@ public:
             LHS_index_list.push_back(i->second);
         }
 
-        
-        body_list.push_back(Move::make(child[0].ep, temp, MoveType::MemToMem));
-        Stmt A_for;
-        A_for = LoopNest::make(LHS_index_list, body_list);
+        // LHS = temp      
+        Stmt xx = Move::make(child[0].ep, temp, MoveType::MemToMem); 
+        xx = IfThenElse::make(cond_temp, xx, fake_stmt);
+        body_list.push_back(xx);
+        Stmt A_for = LoopNest::make(LHS_index_list, body_list);
         sp.push_back(A_for);
-    
+        //-------------------
         //std::cout << "loop index in S " << tmp.size() << std::endl;
         //sp = LoopNest::make(tmp, {main_stmt});
         loop_indexs.clear();
         bandcheck_dom.clear();
         bandcheck_expr.clear();
+        for_temp_list.clear();
+
     }
 
     void IR_LHS(){
@@ -665,14 +707,23 @@ public:
 
       std::map<std::string, Expr>::iterator i;
       std::cout << "i am not ok" << std::endl;
-
+      
+      // 把LHS儿子的expr_index_list合并给自己
       for (i = child[0].expr_index_list.begin();i != child[0].expr_index_list.end();i++) {
-        if (expr_index_list.find(i->first) == expr_index_list.end())
-          expr_index_list[i->first] = i->second;
-        std::cout << "##1#" << i->first << std::endl;
+          if (expr_index_list.find(i->first) == expr_index_list.end())
+            expr_index_list[i->first] = i->second;
       }
 
-      std::cout << "i am ok" << std::endl;
+      // 把LHS儿子的bandcheck_list合并给自己
+      for (i = child[0].bandcheck_list.begin();i != child[0].bandcheck_list.end();i++) {
+          if (bandcheck_list.find(i->first) == bandcheck_list.end())
+              bandcheck_list[i->first] = i->second;
+      }
+      for (std::map<std::string, int>::iterator i = child[0].bandcheck_value.begin(); i != child[0].bandcheck_value.end();++i) {
+          if(bandcheck_value.find(i->first) == bandcheck_value.end()) {
+              bandcheck_value[i->first] = i->second;
+          }
+      }
     }
 
     void IR_RHS(){
@@ -690,26 +741,68 @@ public:
         }
         else ep = child[0].ep;
 
+        // 把RHS儿子的bandcheck_list和bandcheck_value合并给自己
+        if(child.size() == 3) {
+            // bandcheck_list
+            for (std::map<std::string, Expr>::iterator i = child[0].bandcheck_list.begin(); i != child[0].bandcheck_list.end();++i) {
+                if(bandcheck_list.find(i->first) == bandcheck_list.end()) {
+                    bandcheck_list[i->first] = i->second;
+                }
+            }
+            for (std::map<std::string, Expr>::iterator i = child[2].bandcheck_list.begin(); i != child[2].bandcheck_list.end();++i) {
+                if(bandcheck_list.find(i->first) == bandcheck_list.end()) {
+                    bandcheck_list[i->first] = i->second;
+                }
+            }
+            //bandcheck_value
+            for (std::map<std::string, int>::iterator i = child[0].bandcheck_value.begin(); i != child[0].bandcheck_value.end();++i) {
+                if(bandcheck_value.find(i->first) == bandcheck_value.end()) {
+                    bandcheck_value[i->first] = i->second;
+                    //std::cout << "((((((((((((((()))))))))))))" << i->second << std::endl;
+                }
+            }
+            for (std::map<std::string, int>::iterator i = child[2].bandcheck_value.begin(); i != child[2].bandcheck_value.end();++i) {
+                if(bandcheck_value.find(i->first) == bandcheck_value.end()) {
+                    bandcheck_value[i->first] = i->second;
+                    //std::cout << "((((((((((((((()))))))))))))" << i->second << std::endl;
+                }
+            }
+        } else {
+            for (std::map<std::string, Expr>::iterator i = child[0].bandcheck_list.begin(); i != child[0].bandcheck_list.end();++i) {
+                if(bandcheck_list.find(i->first) == bandcheck_list.end()) {
+                    bandcheck_list[i->first] = i->second;
+                }
+            }
+            //bandcheck_value
+            for (std::map<std::string, int>::iterator i = child[0].bandcheck_value.begin(); i != child[0].bandcheck_value.end();++i) {
+                if(bandcheck_value.find(i->first) == bandcheck_value.end()) {
+                    bandcheck_value[i->first] = i->second;
+                    //std::cout << "((((((((((((((()))))))))))))" << i->second << std::endl;
+                }
+            }
+        }
         // std::cout << nodetype2name[t] << " " << str << " " << child.size() << std::endl;
-        // for for for temp+=
+        // 把RHS儿子的expr_index_list合并给自己
         std::map<std::string, Expr>::iterator i;
         if(child.size() == 3){
-        for (i = child[0].expr_index_list.begin();i != child[0].expr_index_list.end();++i) {
-          if (expr_index_list.find(i->first) == expr_index_list.end())
-            expr_index_list[i->first] = i->second;
-          std::cout << "##1#" << i->first << std::endl;
-        }
+            for (i = child[0].expr_index_list.begin();i != child[0].expr_index_list.end();++i) {
+                if (expr_index_list.find(i->first) == expr_index_list.end())
+                    expr_index_list[i->first] = i->second;
+                std::cout << "##1#" << i->first << std::endl;
+            }
         
-        for (i = child[2].expr_index_list.begin();i != child[2].expr_index_list.end();++i) {
-            if(expr_index_list.find(i->first) == expr_index_list.end()) expr_index_list[i->first] = i->second;
-            std::cout << "##1#" << i->first << std::endl;
-        }
+            for (i = child[2].expr_index_list.begin();i != child[2].expr_index_list.end();++i) {
+                if(expr_index_list.find(i->first) == expr_index_list.end())
+                    expr_index_list[i->first] = i->second;
+                std::cout << "##1#" << i->first << std::endl;
+            }
         } 
         else {
             for (i = child[0].expr_index_list.begin();i != child[0].expr_index_list.end();++i) {
-            if(expr_index_list.find(i->first) == expr_index_list.end()) expr_index_list[i->first] = i->second;
-            std::cout << "##2#" << i->first << std::endl;
-        }
+                if(expr_index_list.find(i->first) == expr_index_list.end())
+                    expr_index_list[i->first] = i->second;
+                std::cout << "##2#" << i->first << std::endl;
+            }
         }
     }
 
@@ -729,7 +822,7 @@ public:
     }
 
     void IR_TRef() {
-        
+        // creat Tref
         std::string tname = child[0].str;
         std::vector<size_t> bound_list;
         for(int i = 0; i < child[1].child.size(); ++i){
@@ -743,6 +836,8 @@ public:
         }
         //std::cout << tname << std::endl;
         ep = Var::make(data_type, tname, index_list, bound_list);
+
+
         if(compare_str(tname, example.outs[0])) {
             if(outputs.find(tname) == outputs.end()) outputs[tname] = ep;
         }
@@ -767,12 +862,21 @@ public:
                 bandcheck_expr[index_name] = child[2].child[i].ep;
             }
         }
-
-        // this is for {for temp+={for temp+=}}
-        std::cout << nodetype2name[t] << "______ " << str << " " << child.size() << std::endl;
+        
+         
+        //std::cout << nodetype2name[t] << "______ " << str << " " << child.size() << std::endl;
         std::map<std::string, Expr>::iterator j;
         for(int i = 0; i < child[2].child.size(); ++i){
             //std::cout << child[2].child[i].str << " "  ;
+            //把Alist中的所有儿子的str和ep存入bandcheck_list，用于加减项的bandcheck
+            if(bandcheck_list.find(child[2].child[i].str) == bandcheck_list.end()) {
+                bandcheck_list[child[2].child[i].str] = child[2].child[i].ep;
+                bandcheck_value[child[2].child[i].str] = int(child[1].child[i].value);
+                //std::cout << "((((((((((((((()))))))))))))" << child[1].child[i].value << std::endl;
+            } else if (bandcheck_value[child[2].child[i].str] > int(child[1].child[i].value)) {
+                bandcheck_value[child[2].child[i].str] = int(child[1].child[i].value);
+            }
+            // 把Alist中的所有儿子的expr_index_list合并存入expr_index_list
             for (j = child[2].child[i].expr_index_list.begin();j != child[2].child[i].expr_index_list.end();++j) {
                 if(expr_index_list.find(j->first) == expr_index_list.end()) expr_index_list[j->first] = j->second;
                 std::cout << "##1#" << j->first << std::endl;
@@ -803,15 +907,16 @@ public:
                 case '/': ep = Binary::make(index_type, BinaryOpType::Div, ch1, ch2); break;
                 case '%': ep = Binary::make(index_type, BinaryOpType::Mod, ch1, ch2);break;
                 default: std::cout << "Not Implemented Op, so sad!";
-                }
+            }
+            // 往expr_index_list中放入组合加减项需要的单个index
             std::map<std::string, Expr>::iterator i ;
             for (i = child[0].expr_index_list.begin(); i != child[0].expr_index_list.end();++i)
             {
                 if (expr_index_list.find(i->first) == expr_index_list.end())
                 {
                     expr_index_list[i->first] = i->second;
-              }
-              std::cout << "##1#" << i->first << std::endl;
+                }
+                std::cout << "##1#" << i->first << std::endl;
             }
             for (i = child[2].expr_index_list.begin(); i != child[2].expr_index_list.end();++i)
             {
@@ -865,11 +970,11 @@ void find_item(AST *RHS, int p_or_n) {
                 find_item(&(RHS->child[2]), 1);
             }
             else {
-                Temp_for temp(RHS->str, p_or_n, RHS->ep, RHS->expr_index_list, RHS->t);
+                Temp_for temp(RHS->str, p_or_n, RHS->ep, RHS->expr_index_list, RHS->t, RHS->bandcheck_list, RHS->bandcheck_value);
                 for_temp_list.push_back(temp);
             }
         } else {
-            Temp_for temp(RHS->str, p_or_n, RHS->ep, RHS->expr_index_list, RHS->t);
+            Temp_for temp(RHS->str, p_or_n, RHS->ep, RHS->expr_index_list, RHS->t, RHS->bandcheck_list, RHS->bandcheck_value);
             for_temp_list.push_back(temp);
         }
     }
@@ -877,54 +982,57 @@ void find_item(AST *RHS, int p_or_n) {
         //std::cout << "^^^" << RHS->str <<"%%%%"<<RHS->child[0].str << std::endl;
         if (RHS->t == 4 || RHS->t == 5 || RHS->t == 6 )
         {
-            Temp_for temp(RHS->str, p_or_n, RHS->ep, RHS->expr_index_list, RHS->t);
+            Temp_for temp(RHS->str, p_or_n, RHS->ep, RHS->expr_index_list, RHS->t, RHS->bandcheck_list, RHS->bandcheck_value);
             for_temp_list.push_back(temp);
         } else {
-            find_item(&(RHS->child[0]), p_or_n);
+        find_item(&(RHS->child[0]), p_or_n);
         }
         //std::cout << "pushback:" << temp.ep << std::endl;
     }
 }
 
 
-
 int main(int argc, char* argv[]){
-    std::string src;
-    //src = "../project/cases/case5.json";
-    // for(int i = 0; i < argc; ++i){
-    //     std::cout << argv[i] << std::endl;
-    // }
-    src = argv[1];
-    std::cout << src << std::endl;
-    example = parse_json(src);
-    example.print();
-    AST root = AST((nodetype) 0, example.kernel);
-    root.build_tree();
-    std::cout << "-----" << std::endl;
-    root.travel();
-    std::cout << "*****" << std::endl;
-    root.build_IR();
+    std::string src, dst;
+    for(int i = 0; i <= 10; ++i){
+        // if(i == 6) continue;
+        if(i == 0) src = "./cases/example.json";
+        else src = "./cases/case" + std::to_string(i) + ".json";
+        if(access(src.c_str(), 0) == -1) continue;
+        example = parse_json(src);
+        example.print();
 
-    std::cout << root.str <<std::endl;
+        dst = "./kernels/" + example.name + ".cc";
+        if(example.data_type == "float") data_type = Type::float_scalar(32);
+        else if(example.data_type == "int") data_type = Type::int_scalar(32);
+        else std::cout << "data type in json not int or float!" << std::endl;
 
-    Group kernel = root.gp;
+        AST root = AST((nodetype) 0, example.kernel);
+        root.build_tree();
+        std::cout << "-----" << std::endl;
+        root.travel();
+        std::cout << "*****" << std::endl;
+        root.build_IR();
 
-    // visitor
-    IRVisitor visitor;
-    root.gp.visit_group(&visitor);
+        std::cout << root.str <<std::endl;
 
-    // mutator
-    //IRMutator mutator;
-    //kernel = mutator.mutate(kernel);
+        Group kernel = root.gp;
 
-    // printer
-    // IRPrinter printer;
-    // std::string code = printer.print(root.gp);
+        // visitor
+        IRVisitor visitor;
+        root.gp.visit_group(&visitor);
 
-    CCPrinter printer;
-    std::string code = printer.print(root.gp);
+        // mutator
+        //IRMutator mutator;
+        //kernel = mutator.mutate(kernel);
 
-    std::cout << "##123####" << std::endl;
-    std::cout << code;
+        // printer
+        CCPrinter printer;
+        std::string code = printer.print(root.gp);
+        std::ofstream ofile(dst, std::ios::out);
+        ofile << code;
+        ofile.close();
+        std::cout << "************" << std::endl;
+    }
     return 0;
 }

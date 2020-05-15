@@ -37,7 +37,8 @@ namespace Boost {
             void exit() {
                 indent -= 2;
             }
-
+        
+            void declaretemp(Ref<const Kernel> op);
             void visit(Ref<const IntImm>) override;
             void visit(Ref<const UIntImm>) override;
             void visit(Ref<const FloatImm>) override;
