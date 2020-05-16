@@ -446,7 +446,6 @@ public:
                     break;
                 }
                 tmp = str.substr(i, s1 - i);
-                std:: cout << "haha" << tmp << std::endl;
                 ch = AST((nodetype) 10, tmp); // Id
                 v2.push_back(ch);
                 i = s1;
@@ -1011,7 +1010,6 @@ void find_item(AST *RHS, int p_or_n) {
 int main(int argc, char* argv[]){
     std::string src, dst;
     for(int i = 0; i <= 10; ++i){
-        // if(i == 6) continue;
         if(i == 0) src = "./cases/example.json";
         else src = "./cases/case" + std::to_string(i) + ".json";
         if(access(src.c_str(), 0) == -1) continue;

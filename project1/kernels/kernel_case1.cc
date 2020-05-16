@@ -1,6 +1,6 @@
 #include "../run.h"
 void kernel_case1(float (&A)[32][16]) {
-  float temp[32][16];
+  float temp[32][16] = {};
   for(int i = 0; i < 0 + 32; ++i){
     for(int j = 0; j < 0 + 16; ++j){
       if ((((0 <= i && i < 32) && 0 <= j) && j < 16)) {

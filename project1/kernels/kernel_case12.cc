@@ -1,5 +1,5 @@
 #include "../run.h"
-void kernel_case6(float (&B)[2][16][7][7], float (&C)[8][16][3][3], float (&A)[2][8][5][5]) {
+void kernel_case12(float (&B)[2][16][7][7], float (&C)[8][16][3][3], float (&A)[2][8][5][5]) {
   float temp[2][8][5][5] = {};
   for(int k = 0; k < 0 + 8; ++k){
     for(int n = 0; n < 0 + 2; ++n){

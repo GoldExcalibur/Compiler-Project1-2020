@@ -3,8 +3,7 @@
 //
 
 #include "CCPrinter.h"
-#include "string"
-#include "cstring"
+
 
 namespace Boost {
 
@@ -253,24 +252,9 @@ namespace Boost {
             print_indent();
             oss << "#include \"../run.h\"\n";
             oss << "void " << op->name << "(";
-            print_arg = true;
-            for (size_t i = 0; i < op->inputs.size(); ++i) {
-                op->inputs[i].visit_expr(this);
-                if (i < op->inputs.size() - 1) {
-                    oss << ", ";
-                }
-            }
-            for (size_t i = 0; i < op->outputs.size(); ++i) {
-                if(i>0 || (i==0 && op->inputs.size()>0)){
-                    oss << ", ";
-                }
-                op->outputs[i].visit_expr(this);
-            }
-            print_arg = false;
+            arglist(op);
             oss << ") {\n";
             enter();
-
-            // declare "temp"
             declaretemp(op);
 
             for (auto stmt : op->stmt_list) {
@@ -280,15 +264,38 @@ namespace Boost {
             oss << "}\n";
         }
 
+        void CCPrinter::arglist(Ref<const Kernel> op){
+            print_arg = true;
+            std::vector<std::string> inputnames;
+            for (size_t i = 0; i < op->inputs.size(); ++i) {
+                op->inputs[i].visit_expr(this);
+                if (i < op->inputs.size() - 1) {
+                    oss << ", ";
+                }
+                inputnames.push_back(static_cast<const Var*>((op->inputs[i]).get())->name);
+            }
+            for (size_t i = 0; i < op->outputs.size(); ++i) {
+                std::string name = static_cast<const Var*>((op->outputs[i]).get())->name;
+                if(find(inputnames.begin(), inputnames.end(), name) != inputnames.end()) continue;
+                if(i>0 || (i==0 && op->inputs.size()>0)){
+                    oss << ", ";
+                }
+                op->outputs[i].visit_expr(this);
+            }
+            print_arg = false;
+        }
+
+
         void CCPrinter::declaretemp(Ref<const Kernel> op){
+            print_indent();
             //note!!
             //premise: outputs isn't empty
-            print_indent();
             if(op->outputs.size()==0){
-                std::cout << "temp declaration fault! because output is empty!"<<std::endl;
+                std::cout << "CCPrinter error: output is empty!!!"<<std::endl;
                 return;
             }
-            const Var* output =static_cast<const Var*>((op->outputs[0]).get());
+            const Var* output =
+                    static_cast<const Var*>((op->outputs[0]).get());
             if(output->type().is_int()){
                 oss << "int";
             }
@@ -299,10 +306,12 @@ namespace Boost {
             for (size_t i = 0; i < output->shape.size(); ++i) {
                 oss <<"[" << output->shape[i] << "]";
             }
-            // oss << " = {0};\n";
-            oss << ";\n" ;
+            oss << " = {};\n";
         }
 
     }  // namespace Internal
+
+
+
 
 }  // namespace Boost

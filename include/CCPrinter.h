@@ -5,8 +5,12 @@
 #ifndef BOOST_CCPRINTER_H
 #define BOOST_CCPRINTER_H
 
-#include <string>
 #include <sstream>
+#include <string>
+#include <cstring>
+#include <vector>
+#include <algorithm>
+
 #include "IRPrinter.h"
 #include "IRVisitor.h"
 
@@ -37,8 +41,9 @@ namespace Boost {
             void exit() {
                 indent -= 2;
             }
-        
             void declaretemp(Ref<const Kernel> op);
+            void arglist(Ref<const Kernel> op);
+
             void visit(Ref<const IntImm>) override;
             void visit(Ref<const UIntImm>) override;
             void visit(Ref<const FloatImm>) override;
