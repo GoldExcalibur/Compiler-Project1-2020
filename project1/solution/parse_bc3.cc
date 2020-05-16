@@ -954,7 +954,7 @@ public:
         int zhengshu = -1, xiaoshu = -1;
         if(xsd == -1){
             zhengshu = atoi(str.c_str());
-            std::cout << zhengshu << std::endl;
+            //std::cout << zhengshu << std::endl;
             value = zhengshu;
             ep = Expr(zhengshu);
         }
@@ -963,7 +963,7 @@ public:
             int xiaoshulen = str.size()-xsd-1;
             xiaoshu = atoi(str.substr(xsd+1, xiaoshulen).c_str());
             float result = zhengshu + (xiaoshu/pow(10, xiaoshulen));
-            std::cout << result << std::endl;
+            //std::cout << result << std::endl;
             value = result;
             ep = Expr(result);
         }
