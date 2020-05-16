@@ -561,9 +561,7 @@ public:
         outputs.clear();
     }
 
-    void IR_S(){
-        
-        
+    void IR_S(){        
         std::cout << "_____________***************______________" << std::endl;
         find_item(&(child[1]), 0);
         if(!for_temp_list.size()) {std::cout << "竟然没有检查出来" << std::endl<< std::endl;
