@@ -100,8 +100,8 @@ Case parse_json(std::string src){
     std::vector<std::string> content;
     while(!ifile.eof()){
         ifile.getline(buffer, 300);
-        if(buffer[0] == '{' || buffer[0] == '}') continue;
         std::string tmp = buffer;
+        if((tmp.find("{") != -1) || (tmp.find("}") != -1)) continue;
         int pos = tmp.find(":");
         tmp = tmp.substr(pos+1);
         int pos1 = -1, pos2 = -1;
@@ -262,7 +262,7 @@ public:
     void build_RHS(){
         int s1 = -1, s2 = -1;
         std::string ops = "+-   */%"; // operator priority
-        std::stack<char> v1;
+        std::stack<std::string> v1;
         std::vector<AST> v2;
         std::string tmp;
         AST ch;
@@ -296,18 +296,25 @@ public:
                 i = s1;
             }
             else if(c == '('){
-                v1.push(c);
+                v1.push("(");
                 ++i;
             }
             else if(c == ')'){
-                while(v1.top() != '('){
+                while(v1.top() != "("){
                     RHS_helper(v1, v2);
                 }
                 v1.pop();
                 ++i;
             }
             else if(c == '*' || c == '-' || c == '/' || c == '+' || c == '%'){
-                int c_pri = ops.find(c);
+                std::string tmpop(1, c);
+                if(c == '/' && i+1 < str.size()){
+                    if(str[i+1] == '/') {
+                        tmpop = "//";
+                        ++i; // handle "//" as normal "/""
+                    }
+                }
+                int c_pri = ops.find(tmpop);
                 int top_pri = -1;
                 while(!v1.empty()){
                     top_pri = ops.find(v1.top());
@@ -316,7 +323,7 @@ public:
                     }
                     else break;
                 }
-                v1.push(c);
+                v1.push(tmpop);
                 ++i;
             }
             else ++i;
@@ -336,16 +343,16 @@ public:
         }
     }
 
-    void RHS_helper(std::stack<char>& v1, std::vector<AST>& v2){
+    void RHS_helper(std::stack<std::string>& v1, std::vector<AST>& v2){
         AST ch2 = v2.back();
         v2.pop_back();
         AST ch1 = v2.back();
         v2.pop_back();
         std::string tmp = ch1.str + +" " + v1.top() + " " + ch2.str;
-        AST op = AST((nodetype) 9, std::string(1, v1.top()));
+        AST op = AST((nodetype) 9,  v1.top());
         v1.pop();
         if(!v1.empty()){
-            if(v1.top() == '(') tmp = "(" + tmp + ")";
+            if(v1.top() == "(") tmp = "(" + tmp + ")";
         } 
         AST* ch3 = new AST((nodetype) 3, tmp);
         if(compare_str(str, tmp)) ch3 = this;
@@ -431,7 +438,7 @@ public:
     void build_IdExpr(){
         int s1 = -1;
         std::string ops = "+-    */%";
-        std::stack<char> v1;
+        std::stack<std::string> v1;
         std::vector<AST> v2;
         std::string tmp;
         AST ch = AST();
@@ -463,17 +470,24 @@ public:
                 i = s1;
             }
             else if(c == '('){
-                v1.push(c);
+                v1.push("(");
                 ++i;
             }
             else if(c == ')'){
-                while(v1.top() != '('){
+                while(v1.top() != "("){
                     IdExpr_helper(v1, v2);
                 }
                 v1.pop();
                 ++i;
             }
             else if(c == '*' || c == '-' || c == '/' || c == '+' || c == '%'){
+                std::string tmpop(1, c);
+                if(c == '/' && i+1 < str.size()){
+                    if(str[i+1] == '/'){
+                        tmpop = "//";
+                        ++i; // handle "//" as normal "/""
+                    }
+                }
                 int c_pri = ops.find(c);
                 int top_pri = -1;
                 while(!v1.empty()){
@@ -483,7 +497,7 @@ public:
                     }
                     else break;
                 }
-                v1.push(c);
+                v1.push(tmpop);
                 ++i;
             }
             else ++i;
@@ -493,16 +507,16 @@ public:
         }
     }
 
-    void IdExpr_helper(std::stack<char>& v1, std::vector<AST>& v2){
+    void IdExpr_helper(std::stack<std::string>& v1, std::vector<AST>& v2){
         AST ch2 = v2.back();
         v2.pop_back();
         AST ch1 = v2.back();
         v2.pop_back();
         std::string tmp = ch1.str + +" " + v1.top() + " " + ch2.str;
-        AST op = AST((nodetype) 9, std::string(1, v1.top()));
+        AST op = AST((nodetype) 9, v1.top());
         v1.pop();
         if(!v1.empty()){
-            if(v1.top() == '(') tmp = "(" + tmp + ")";
+            if(v1.top() == "(") tmp = "(" + tmp + ")";
         } 
         AST* ch3 = new AST((nodetype) 10, tmp);
         if(compare_str(str, tmp)) ch3 = this;
@@ -727,14 +741,12 @@ public:
         if(child.size() == 3){
             Expr ch1 = child[0].ep;
             Expr ch2 = child[2].ep;
-            switch(child[1].str[0]){
-                case '+': ep = Binary::make(data_type, BinaryOpType::Add, ch1, ch2);break;
-                case '-': ep = Binary::make(data_type, BinaryOpType::Sub, ch1, ch2);break;
-                case '*': ep = Binary::make(data_type, BinaryOpType::Mul, ch1, ch2);break;
-                case '/': ep = Binary::make(data_type, BinaryOpType::Div, ch1, ch2);break;
-                case '%': ep = Binary::make(data_type, BinaryOpType::Mod, ch1, ch2);break;
-                default: std::cout << "Not Implemented !" << std::endl;
-           }
+            if(child[1].str == "+")ep = Binary::make(data_type, BinaryOpType::Add, ch1, ch2);
+            else if(child[1].str == "-")ep = Binary::make(data_type, BinaryOpType::Sub, ch1, ch2);
+            else if(child[1].str == "*")ep = Binary::make(data_type, BinaryOpType::Mul, ch1, ch2);
+            else if(child[1].str == "/" || child[1].str == "//")ep = Binary::make(data_type, BinaryOpType::Div, ch1, ch2);
+            else if(child[1].str == "%") ep = Binary::make(data_type, BinaryOpType::Mod, ch1, ch2);
+            else std::cout << "Not Implemented !" << std::endl;
         }
         else ep = child[0].ep;
 
@@ -897,14 +909,12 @@ public:
         if(child.size()){
             Expr ch1 = Expr(child[0].ep);
             Expr ch2 = Expr(child[2].ep);
-            switch(child[1].str[0]){
-                case '+': ep = Binary::make(index_type, BinaryOpType::Add, ch1, ch2); break;
-                case '-': ep = Binary::make(index_type, BinaryOpType::Sub, ch1, ch2); break;
-                case '*': ep = Binary::make(index_type, BinaryOpType::Mul, ch1, ch2); break;
-                case '/': ep = Binary::make(index_type, BinaryOpType::Div, ch1, ch2); break;
-                case '%': ep = Binary::make(index_type, BinaryOpType::Mod, ch1, ch2);break;
-                default: std::cout << "Not Implemented Op, so sad!";
-            }
+            if(child[1].str == "+")ep = Binary::make(data_type, BinaryOpType::Add, ch1, ch2);
+            else if(child[1].str == "-")ep = Binary::make(data_type, BinaryOpType::Sub, ch1, ch2);
+            else if(child[1].str == "*")ep = Binary::make(data_type, BinaryOpType::Mul, ch1, ch2);
+            else if(child[1].str == "/" || child[1].str == "//")ep = Binary::make(data_type, BinaryOpType::Div, ch1, ch2);
+            else if(child[1].str == "%") ep = Binary::make(data_type, BinaryOpType::Mod, ch1, ch2);
+            else std::cout << "Not Implemented Op in IdExpr!" << std::endl;
             // 往expr_index_list中放入组合加减项需要的单个index
             std::map<std::string, Expr>::iterator i ;
             for (i = child[0].expr_index_list.begin(); i != child[0].expr_index_list.end();++i)

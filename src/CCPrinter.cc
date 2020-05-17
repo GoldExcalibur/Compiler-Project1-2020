@@ -67,6 +67,7 @@ namespace Boost {
 
         void CCPrinter::visit(Ref<const Binary> op) {
             oss << "(";
+            if(op->op_type == BinaryOpType::Mod) oss << "(int)";
             (op->a).visit_expr(this);
             if (op->op_type == BinaryOpType::Add) {
                 oss << " + ";
